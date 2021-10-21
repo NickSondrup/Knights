@@ -31,3 +31,7 @@ JOIN castles c
 ON c.id = k.castleId;
 
 
+UPDATE castles
+      SET
+      name = @Name,
+      kingdom = @Kingdom
