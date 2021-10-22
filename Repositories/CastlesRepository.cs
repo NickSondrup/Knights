@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -20,11 +21,13 @@ namespace Knights.Repositories
       var sql = @"
       INSERT INTO castles(
         name,
-        kingdom
+        kingdom,
+        creatorId
       )
       VALUES (
         @Name,
-        @Kingdom
+        @Kingdom,
+        @CreatorId
       );
       SELECT LAST_INSERT_ID();
       ";
@@ -40,7 +43,20 @@ namespace Knights.Repositories
 
     public Castle Get(int castleId)
     {
-      return _db.QueryFirstOrDefault<Castle>("SELECT * FROM castles WHERE id = @castleId", new { castleId });
+      // return _db.QueryFirstOrDefault<Castle>("SELECT * FROM castles WHERE id = @castleId", new { castleId });
+      string sql = @"
+        SELECT
+        c.*,
+        a.*
+        FROM castles c
+        JOIN accounts a on c.creatorId = a.id
+        WHERE c.id = @castleId;
+      ";
+      return _db.Query<Castle, Account, Castle>(sql, (c, a) =>
+      {
+        c.Creator = a;
+        return c;
+      }, new{castleId}).FirstOrDefault();
     }
 
     public Castle Edit(int castleId, Castle castleData)
@@ -65,6 +81,16 @@ namespace Knights.Repositories
         throw new System.Exception("The update failed");
       }
       return castleData;
+    }
+
+    internal void DeleteCastle(int castleId)
+    {
+      string sql = "DELETE FROM castles WHERE id = @castleId LIMIT 1;";
+      var rowsAffected = _db.Execute(sql, new {castleId});
+      if(rowsAffected == 0)
+      {
+        throw new Exception("something went wrong yo");
+      }
     }
   }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Knights.Models;
 using Knights.Repositories;
@@ -41,6 +42,16 @@ namespace Knights.Services
 
       _cr.Edit(castleId, castleData);
       return castle;
+    }
+
+    public void DeleteCastle(int castleId, string userId)
+    {
+      Castle foundCastle = Get(castleId);
+      if(foundCastle.CreatorId != userId)
+      {
+        throw new Exception("Tis not allowed M'Lord!");
+      }
+      _cr.DeleteCastle(castleId);
     }
   }
 }

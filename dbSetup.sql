@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS accounts(
 CREATE TABLE IF NOT EXISTS castles(
   id int NOT NULL PRIMARY KEY AUTO_INCREMENT comment 'primary key',
   name varchar(255) comment 'castles name',
-  kingdom varchar(255) comment 'kingdom name'
+  kingdom varchar(255) comment 'kingdom name',
+  creatorId varchar(255) comment 'id of creator'
 ) default charset utf8 comment'';
 CREATE TABLE IF NOT EXISTS knights(
   id int NOT NULL PRIMARY KEY AUTO_INCREMENT comment 'primary key',

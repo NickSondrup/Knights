@@ -9,5 +9,7 @@ namespace Knights.Models
     public string Name { get; set; }
     [Required]
     public string Kingdom { get; set; }
+    public string CreatorId { get; set; }
+    public Profile Creator { get; set; }
   }
 }
